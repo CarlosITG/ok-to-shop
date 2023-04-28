@@ -6,7 +6,7 @@ const oktoUrl = "https://api.okto.shop/v1/products/";
 const vtexUrl = "https://jumbocolombiaio.myvtex.com/api/catalog_system/pvt/sku/stockkeepingunitbyean/";
 
 const oktoHeaders = {
-  "x-auth-token": "nvRInzfkPqBPNd21SISfopq5uhtd4FKTFjocN5Hjq4zoV8laegt2k5Zwmj92ySHlZKqfbpAXoVRiP0e8n2K8VClmAH5YPYTQavVTplnRjSCftbEpoEwiYBMJurO1yEqH",
+  "x-auth-token": "",
 };
 
 
