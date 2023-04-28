@@ -1,0 +1,57 @@
+# Documentación del código
+
+El código tiene como objetivo obtener la información de los productos de una tienda en línea desde la API de `okto.shop` y posteriormente obtener el stock de cada producto a través de la API de `vtex.com`. La información obtenida se almacena en un archivo Excel.
+
+## Librerías utilizadas
+
+El código utiliza las siguientes librerías de Node.js:
+
+- `axios`: para realizar peticiones HTTP.
+- `fs`: para operaciones con el sistema de archivos.
+- `xlsx`: para la creación del archivo Excel.
+
+## Variables
+
+- `oktoUrl`: URL base de la API de okto.shop.
+- `vtexUrl`: URL base de la API de vtex.com.
+- `oktoHeaders`: encabezados de la petición HTTP a la API de okto.shop, que incluyen un token de autenticación.
+- `vtexHeaders`: encabezados de la petición HTTP a la API de vtex.com, que incluyen un token de autenticación y la clave de la aplicación.
+
+## Funciones
+
+### `getProductsIndex()`
+
+La función `getProductsIndex()` obtiene los identificadores (`product_id`) de todos los productos de la tienda utilizando la API de okto.shop. Retorna un array con los `product_id`.
+
+### `getProductDataByIndex(productId)`
+
+La función `getProductDataByIndex(productId)` obtiene la información del producto con el identificador `productId` utilizando la API de okto.shop. Retorna un objeto con la información del producto.
+
+### `getProductInfo()`
+
+La función `getProductInfo()` utiliza `getProductsIndex()` y `getProductDataByIndex(productId)` para obtener la información de todos los productos de la tienda. Retorna un array con la información de todos los productos.
+
+### `getProductEanList()`
+
+La función `getProductEanList()` utiliza `getProductInfo()` para obtener la lista de códigos EAN de todos los productos de la tienda. Retorna un array con los códigos EAN.
+
+### `getProductStockByEanList(eanList)`
+
+La función `getProductStockByEanList(eanList)` obtiene el stock de los productos en la lista `eanList` utilizando la API de vtex.com. Retorna un array de objetos que contienen el código EAN del producto y su identificador en vtex.com.
+
+### `saveToExcel(productInfo, stockList)`
+
+La función `saveToExcel(productInfo, stockList)` crea un archivo Excel con dos hojas: una para la información de los productos y otra para el stock. Los argumentos `productInfo` y `stockList` son arrays con la información de los productos y el stock, respectivamente.
+
+## Flujo principal
+
+El flujo principal del código es el siguiente:
+
+1. Se llama a la función `getProductInfo()` para obtener la información de todos los productos de la tienda.
+2. Se llama a la función `getProductEanList()` para obtener la lista de códigos EAN de todos los productos de la tienda.
+3. Se llama a la función `getProductStockByEanList(eanList)` para obtener el stock de los productos en la lista de códigos EAN.
+4. Se llama a la función `saveToExcel(productInfo, stockList)` para guardar la información de los productos y el stock en un archivo Excel.
+
+## Observaciones
+
+En la función `getProductStockByEanList(eanList)` hay dos versiones del código para obtener el stock de los productos. La versión comentada es utilizando un bucle `for`,
