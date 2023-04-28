@@ -5,8 +5,7 @@ const XLSX = require("xlsx");
 const url = "https://api.okto.shop/v1/products/";
 
 const headers = {
-  "x-auth-token":
-    "",
+  "x-auth-token": "",
 };
 
 async function getProductsIndex() {
@@ -45,44 +44,9 @@ async function getProductEanList() {
   return eanList;
 }
 
-const accountName = "tu_account_name";
-const environment = "tu_environment";
-const apiKey = "tu_api_key";
-const apiToken = "tu_api_token";
-
-const urlVtex = `https://${accountName}.${environment}.com.br/api/catalog_system/pvt/sku/stockkeepingunitbyean/`;
-
-const headersVtex = {
-  "Content-Type": "application/json",
-  "X-VTEX-API-AppKey": apiKey,
-  "X-VTEX-API-AppToken": apiToken,
-};
-
-async function getProductStockByEanList(eanList) {
-  const promises = eanList.map(async (ean) => {
-    const requestUrl = `${urlVtex}${ean}` 
-    try {
-      const { data } = await axios.get(requestUrl, { headersVtex });
-      return data;
-    } catch (error) {
-      console.error(
-        `Error obteniendo stock del producto con EAN ${ean}:`,
-        error
-      );
-    }
-  });
-  const responses = await Promise.all(promises);
-  return responses;
-}
-
 // Ejemplo de uso
 (async () => {
   //gravar productos en exel
   const productInfo = await getProductInfo();
   await saveToExcel(productInfo);
-
-  //consultas por ean a vtex
-  const eanList = await getProductEanList();
-  const stockList = await getProductStockByEanList(eanList);
-  console.log(stockList);
 })();
