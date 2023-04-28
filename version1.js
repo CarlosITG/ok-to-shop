@@ -6,7 +6,7 @@ const url = "https://api.okto.shop/v1/products/";
 
 const headers = {
   "x-auth-token":
-    "nvRInzfkPqBPNd21SISfopq5uhtd4FKTFjocN5Hjq4zoV8laegt2k5Zwmj92ySHlZKqfbpAXoVRiP0e8n2K8VClmAH5YPYTQavVTplnRjSCftbEpoEwiYBMJurO1yEqH",
+    "",
 };
 
 async function getProductsIndex() {
