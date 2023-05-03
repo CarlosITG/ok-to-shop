@@ -1,3 +1,5 @@
+# Script para obtener información de productos y guardarla en Excel y JSON
+
 # Documentación del código
 
 El código tiene como objetivo obtener la información de los productos de una tienda en línea desde la API de `okto.shop` y posteriormente obtener el stock de cada producto a través de la API de `vtex.com`. La información obtenida se almacena en un archivo Excel.
@@ -9,6 +11,45 @@ El código utiliza las siguientes librerías de Node.js:
 - `axios`: para realizar peticiones HTTP.
 - `fs`: para operaciones con el sistema de archivos.
 - `xlsx`: para la creación del archivo Excel.
+
+## Script version1.js
+
+Este código es un script de Node.js que utiliza las bibliotecas `axios`, `fs` y `xlsx` para obtener información de productos de una API y guardarla en un archivo de Excel y en un archivo JSON.
+
+Primero, se define la URL de la API y los encabezados necesarios para hacer una solicitud. Luego, se define una función `getProductsIndex` que utiliza `axios` para hacer una solicitud GET a la URL de la API y obtener una lista de ID de productos.
+
+Después, se define una función `getProductDataByIndex` que toma un ID de producto como argumento y hace una solicitud GET a la URL de la API con el ID del producto para obtener información detallada sobre ese producto.
+
+La función `getProductInfo` utiliza las funciones `getProductsIndex` y `getProductDataByIndex` para obtener información detallada sobre todos los productos y devuelve esa información.
+
+Finalmente, se define una función `saveToExcel` que toma la información de los productos y la información nutricional como argumentos y utiliza la biblioteca `xlsx` para crear un libro de Excel con dos hojas: una hoja con la información de los productos y otra hoja con la información nutricional. Luego, guarda el libro de Excel en un archivo llamado "productos.xlsx".
+
+También se define una función `saveToJson` que toma la información de los productos como argumento y utiliza la biblioteca `fs` para guardar esa información en un archivo JSON llamado "productos.json".
+
+Aquí tienes más detalles sobre cada función:
+
+- `getProductsIndex`: Esta función hace una solicitud GET a la URL de la API utilizando `axios` y los encabezados definidos previamente. La respuesta de la API se guarda en la variable `data` y se devuelve un array con los ID de los productos utilizando el método `map` para extraer el valor de `product_id` de cada objeto en el array `products_list`.
+
+- `getProductDataByIndex`: Esta función toma un ID de producto como argumento y construye una nueva URL utilizando el ID del producto. Luego, hace una solicitud GET a esa URL utilizando `axios` y los encabezados definidos previamente. Si la solicitud es exitosa, se devuelve la información detallada del producto en la propiedad `response` de la respuesta de la API. Si ocurre un error durante la solicitud, se muestra el error en la consola.
+
+- `getProductInfo`: Esta función utiliza la función `getProductsIndex` para obtener un array con los ID de los productos. Luego, utiliza el método `map` para aplicar la función `getProductDataByIndex` a cada ID de producto y obtener información detallada sobre cada producto. Como `getProductDataByIndex` es una función asíncrona, se utiliza `Promise.all` para esperar a que todas las solicitudes se completen antes de devolver el array con la información detallada de todos los productos.
+
+- `saveToExcel`: Esta función toma dos argumentos: un array con la información de los productos y un array con la información nutricional. Utiliza la biblioteca `xlsx` para crear un libro de Excel con dos hojas: una hoja llamada "Productos" con la información de los productos y otra hoja llamada "Información Nutricional" con la información nutricional. Luego, guarda el libro de Excel en un archivo llamado "productos.xlsx" y muestra un mensaje en la consola indicando que el archivo se ha guardado exitosamente.
+
+- `saveToJson`: Esta función toma un array con la información de los productos como argumento y utiliza `JSON.stringify` para convertirlo en una cadena JSON. Luego, utiliza la biblioteca `fs` para guardar esa cadena en un archivo llamado "productos.json". Si ocurre un error al guardar el archivo, se muestra un mensaje de error en la consola.
+
+El flujo principal del script es el siguiente:
+
+1. Se define la URL de la API y los encabezados necesarios para hacer una solicitud.
+2. Se define una función `getProductsIndex` que utiliza `axios` para hacer una solicitud GET a la URL de la API y obtener una lista de ID de productos.
+3. Se define una función `getProductDataByIndex` que toma un ID de producto como argumento y hace una solicitud GET a la URL de la API con el ID del producto para obtener información detallada sobre ese producto.
+4. La función `getProductInfo` utiliza las funciones `getProductsIndex` y `getProductDataByIndex` para obtener información detallada sobre todos los productos y devuelve esa información.
+5. Se define una función `saveToExcel` que toma la información de los productos y la información nutricional como argumentos y utiliza la biblioteca `xlsx` para crear un libro de Excel con dos hojas: una hoja con la información de los productos y otra hoja con la información nutricional. Luego, guarda el libro de Excel en un archivo llamado "productos.xlsx".
+6. También se define una función `saveToJson` que toma la información de los productos como argumento y utiliza la biblioteca `fs` para guardar esa información en un archivo JSON llamado "productos.json".
+
+
+
+## Script version2.js
 
 ## Variables
 
