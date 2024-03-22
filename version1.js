@@ -53,7 +53,7 @@ async function saveToExcel(products, nutritionalInfo) {
       },
       SheetNames: ["Productos", "Información Nutricional"],
     },
-    "productos.xlsx"
+    "productosv1.xlsx"
   );
 
   console.log("Se ha guardado el archivo productos.xlsx exitosamente.");
