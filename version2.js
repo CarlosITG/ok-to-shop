@@ -16,7 +16,9 @@ async function getProductsIndex() {
 
 async function getProductDataByIndex(productId) {
   try {
-    const { data } = await axios.get(oktoUrl + productId, { headers: oktoHeaders });    
+    const { data } = await axios.get(oktoUrl + productId, {
+      headers: oktoHeaders,
+    });
     return data.response;
   } catch (error) {
     // console.error(`Error obteniendo información del producto con ID ${productId}:`, error);
@@ -26,39 +28,24 @@ async function getProductDataByIndex(productId) {
 
 async function getProductInfo() {
   const productIds = await getProductsIndex();
-  const productInfo = await Promise.all(productIds.map(getProductDataByIndex));  
+  const productInfo = await Promise.all(productIds.map(getProductDataByIndex));
   return productInfo.filter((product) => product !== null);
 }
 
-async function getProductEanList() {
-  const products = await getProductInfo();
-  const eanList = products.map((product) => product.product_ean);
-  return eanList;
-}
-
-
-async function productVtexByEanListOkToShop(eanList) {
-
-  const promises = eanList.map(async (ean) => {  
-    const url = `https://jumbocolombiaio.vtexcommercestable.com.br/api/catalog_system/pvt/sku/stockkeepingunitbyean/${ean}`;
+async function productVtexByEanListOkToShop(productList) {
+  const promises = productList.map(async (product) => {
+    const url = `https://jumbocolombiaio.vtexcommercestable.com.br/api/catalog_system/pvt/sku/stockkeepingunitbyean/${product.product_ean}`;
     const options = {
-        headers: {
-            'X-VTEX-API-AppKey': '',
-            'X-VTEX-API-AppToken': ''
-        }
+      headers: {
+        "X-VTEX-API-AppKey": "",
+        "X-VTEX-API-AppToken": "",
+      },
     };
 
     try {
-      // const { data } = await axios.get(requestUrl, { vtexHeaders });  
-      const {data} = await axios.get(url, options);  
-      return {'productId': data.ProductId,
-              'eanOktoShop':ean  
-              };
+      const { data } = await axios.get(url, options);
+      return { ...product, Id: data.Id, ProductId: data.ProductId };
     } catch (error) {
-      // console.error(
-      //   `Error obteniendo stock del producto con EAN ${ean}:`,
-      //   error
-      // );
       return null; // retornamos null para indicar que hubo un error
     }
   });
@@ -66,37 +53,42 @@ async function productVtexByEanListOkToShop(eanList) {
   return responses.filter((response) => response !== null); // filtramos los elementos que son null (hubo un error)
 }
 
-
+//funcion para guardar en ecel
 
 async function saveToExcel(productInfo, stockList) {
   const workbook = XLSX.utils.book_new();
-  
+
   // Hoja para información de productos
   const productWorksheet = XLSX.utils.json_to_sheet(productInfo);
   XLSX.utils.book_append_sheet(workbook, productWorksheet, "Productos");
-  
+
   // Hoja para información de stock
   const stockWorksheet = XLSX.utils.json_to_sheet(stockList);
   XLSX.utils.book_append_sheet(workbook, stockWorksheet, "Stock");
-  
+
   const fileName = "productos.xlsx";
   XLSX.writeFile(workbook, fileName);
   console.log(`Se ha guardado el archivo ${fileName} exitosamente.`);
 }
 
-(async () => {  
- // guardar productos en Excel
-//  const productInfo = await getProductInfo();
-  
- // consultar stock por EAN en Vtex
- const eanList = await getProductEanList();
- const stockList = await productVtexByEanListOkToShop(eanList);
+//funcion para guardar en JSON
+async function saveToJson(data) {
+  const json = JSON.stringify(data);
+  const fileName = "productos.json";
+  fs.writeFile(fileName, json, "utf8", (err) => {
+    if (err) {
+      console.log(`Error al guardar el archivo ${fileName}: ${err}`);
+    } else {
+      console.log(`Se ha guardado el archivo ${fileName} exitosamente.`);
+    }
+  });
+}
 
- console.log('los porductos vtex',stockList);
-
-
- 
- // guardar en el archivo Excel
-//  await saveToExcel(productInfo, stockList);
+(async () => {
+  //obtener los productos ok to shop
+  const productList = await getProductInfo();
+  //obtener el el producto por ean de Vtex
+  const productListInfo = await productVtexByEanListOkToShop(productList);
+  //guardar la informacion en JSON
+  await saveToJson(productListInfo);
 })();
-

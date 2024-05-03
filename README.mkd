@@ -1,98 +1,98 @@
-# Script para obtener información de productos y guardarla en Excel y JSON
+# Documentación Técnica - version2.js
 
-# Documentación del código
+El script `version2.js` es una herramienta de automatización que interactúa con la API de Okto Shop y la API de Vtex para obtener información sobre productos y su disponibilidad en stock, respectivamente. Luego, esta información se guarda en archivos JSON y Excel para su posterior análisis.
 
-El código tiene como objetivo obtener la información de los productos de una tienda en línea desde la API de `okto.shop` y posteriormente obtener el stock de cada producto a través de la API de `vtex.com`. La información obtenida se almacena en un archivo Excel.
+## Requisitos
+- Node.js instalado en el entorno de ejecución.
+- Dependencias npm: axios, fs, XLSX.
 
-## Librerías utilizadas
-
-El código utiliza las siguientes librerías de Node.js:
-
-- `axios`: para realizar peticiones HTTP.
-- `fs`: para operaciones con el sistema de archivos.
-- `xlsx`: para la creación del archivo Excel.
-
-## Script version1.js
-
-Este código es un script de Node.js que utiliza las bibliotecas `axios`, `fs` y `xlsx` para obtener información de productos de una API y guardarla en un archivo de Excel y en un archivo JSON.
-
-Primero, se define la URL de la API y los encabezados necesarios para hacer una solicitud. Luego, se define una función `getProductsIndex` que utiliza `axios` para hacer una solicitud GET a la URL de la API y obtener una lista de ID de productos.
-
-Después, se define una función `getProductDataByIndex` que toma un ID de producto como argumento y hace una solicitud GET a la URL de la API con el ID del producto para obtener información detallada sobre ese producto.
-
-La función `getProductInfo` utiliza las funciones `getProductsIndex` y `getProductDataByIndex` para obtener información detallada sobre todos los productos y devuelve esa información.
-
-Finalmente, se define una función `saveToExcel` que toma la información de los productos y la información nutricional como argumentos y utiliza la biblioteca `xlsx` para crear un libro de Excel con dos hojas: una hoja con la información de los productos y otra hoja con la información nutricional. Luego, guarda el libro de Excel en un archivo llamado "productos.xlsx".
-
-También se define una función `saveToJson` que toma la información de los productos como argumento y utiliza la biblioteca `fs` para guardar esa información en un archivo JSON llamado "productos.json".
-
-Aquí tienes más detalles sobre cada función:
-
-- `getProductsIndex`: Esta función hace una solicitud GET a la URL de la API utilizando `axios` y los encabezados definidos previamente. La respuesta de la API se guarda en la variable `data` y se devuelve un array con los ID de los productos utilizando el método `map` para extraer el valor de `product_id` de cada objeto en el array `products_list`.
-
-- `getProductDataByIndex`: Esta función toma un ID de producto como argumento y construye una nueva URL utilizando el ID del producto. Luego, hace una solicitud GET a esa URL utilizando `axios` y los encabezados definidos previamente. Si la solicitud es exitosa, se devuelve la información detallada del producto en la propiedad `response` de la respuesta de la API. Si ocurre un error durante la solicitud, se muestra el error en la consola.
-
-- `getProductInfo`: Esta función utiliza la función `getProductsIndex` para obtener un array con los ID de los productos. Luego, utiliza el método `map` para aplicar la función `getProductDataByIndex` a cada ID de producto y obtener información detallada sobre cada producto. Como `getProductDataByIndex` es una función asíncrona, se utiliza `Promise.all` para esperar a que todas las solicitudes se completen antes de devolver el array con la información detallada de todos los productos.
-
-- `saveToExcel`: Esta función toma dos argumentos: un array con la información de los productos y un array con la información nutricional. Utiliza la biblioteca `xlsx` para crear un libro de Excel con dos hojas: una hoja llamada "Productos" con la información de los productos y otra hoja llamada "Información Nutricional" con la información nutricional. Luego, guarda el libro de Excel en un archivo llamado "productos.xlsx" y muestra un mensaje en la consola indicando que el archivo se ha guardado exitosamente.
-
-- `saveToJson`: Esta función toma un array con la información de los productos como argumento y utiliza `JSON.stringify` para convertirlo en una cadena JSON. Luego, utiliza la biblioteca `fs` para guardar esa cadena en un archivo llamado "productos.json". Si ocurre un error al guardar el archivo, se muestra un mensaje de error en la consola.
-
-El flujo principal del script es el siguiente:
-
-1. Se define la URL de la API y los encabezados necesarios para hacer una solicitud.
-2. Se define una función `getProductsIndex` que utiliza `axios` para hacer una solicitud GET a la URL de la API y obtener una lista de ID de productos.
-3. Se define una función `getProductDataByIndex` que toma un ID de producto como argumento y hace una solicitud GET a la URL de la API con el ID del producto para obtener información detallada sobre ese producto.
-4. La función `getProductInfo` utiliza las funciones `getProductsIndex` y `getProductDataByIndex` para obtener información detallada sobre todos los productos y devuelve esa información.
-5. Se define una función `saveToExcel` que toma la información de los productos y la información nutricional como argumentos y utiliza la biblioteca `xlsx` para crear un libro de Excel con dos hojas: una hoja con la información de los productos y otra hoja con la información nutricional. Luego, guarda el libro de Excel en un archivo llamado "productos.xlsx".
-6. También se define una función `saveToJson` que toma la información de los productos como argumento y utiliza la biblioteca `fs` para guardar esa información en un archivo JSON llamado "productos.json".
-
-
-
-## Script version2.js
-
-## Variables
-
-- `oktoUrl`: URL base de la API de okto.shop.
-- `vtexUrl`: URL base de la API de vtex.com.
-- `oktoHeaders`: encabezados de la petición HTTP a la API de okto.shop, que incluyen un token de autenticación.
-- `vtexHeaders`: encabezados de la petición HTTP a la API de vtex.com, que incluyen un token de autenticación y la clave de la aplicación.
-
-## Funciones
+## Funciones Principales
 
 ### `getProductsIndex()`
-
-La función `getProductsIndex()` obtiene los identificadores (`product_id`) de todos los productos de la tienda utilizando la API de okto.shop. Retorna un array con los `product_id`.
+- **Descripción:** Obtiene una lista de IDs de productos desde la API de Okto Shop.
+- **Parámetros:** Ninguno.
+- **Retorno:** Una lista de IDs de productos.
 
 ### `getProductDataByIndex(productId)`
-
-La función `getProductDataByIndex(productId)` obtiene la información del producto con el identificador `productId` utilizando la API de okto.shop. Retorna un objeto con la información del producto.
+- **Descripción:** Obtiene los datos de un producto específico a través de su ID desde la API de Okto Shop.
+- **Parámetros:** `productId` - ID del producto.
+- **Retorno:** Los datos del producto en formato JSON.
 
 ### `getProductInfo()`
+- **Descripción:** Obtiene información detallada de todos los productos disponibles en Okto Shop.
+- **Parámetros:** Ninguno.
+- **Retorno:** Una lista de objetos JSON con la información de los productos.
 
-La función `getProductInfo()` utiliza `getProductsIndex()` y `getProductDataByIndex(productId)` para obtener la información de todos los productos de la tienda. Retorna un array con la información de todos los productos.
-
-### `getProductEanList()`
-
-La función `getProductEanList()` utiliza `getProductInfo()` para obtener la lista de códigos EAN de todos los productos de la tienda. Retorna un array con los códigos EAN.
-
-### `getProductStockByEanList(eanList)`
-
-La función `getProductStockByEanList(eanList)` obtiene el stock de los productos en la lista `eanList` utilizando la API de vtex.com. Retorna un array de objetos que contienen el código EAN del producto y su identificador en vtex.com.
+### `productVtexByEanListOkToShop(productList)`
+- **Descripción:** Obtiene información adicional de los productos desde la API de Vtex utilizando el código EAN.
+- **Parámetros:** `productList` - Lista de productos obtenida de Okto Shop.
+- **Retorno:** Una lista de objetos JSON con la información de los productos enriquecida con datos de Vtex.
 
 ### `saveToExcel(productInfo, stockList)`
+- **Descripción:** Guarda la información de productos y stock en un archivo Excel.
+- **Parámetros:** 
+  - `productInfo` - Lista de objetos JSON con información de productos.
+  - `stockList` - Lista de objetos JSON con información de stock.
+- **Retorno:** Ninguno.
 
-La función `saveToExcel(productInfo, stockList)` crea un archivo Excel con dos hojas: una para la información de los productos y otra para el stock. Los argumentos `productInfo` y `stockList` son arrays con la información de los productos y el stock, respectivamente.
+### `saveToJson(data)`
+- **Descripción:** Guarda la información en un archivo JSON.
+- **Parámetros:** `data` - Datos a ser guardados en formato JSON.
+- **Retorno:** Ninguno.
 
-## Flujo principal
+### Ejecución Principal
+- **Descripción:** Ejecuta el flujo principal del script, obteniendo los datos de los productos de Okto Shop, luego enriqueciendo esa información con datos de Vtex y finalmente guardando la información en un archivo JSON.
+- **Parámetros:** Ninguno.
 
-El flujo principal del código es el siguiente:
+## Uso
+1. Asegúrese de tener las credenciales necesarias para acceder a las APIs de Okto Shop y Vtex.
+2. Configure las credenciales en las variables `oktoHeaders` y en el objeto de opciones `headers` dentro de la función `productVtexByEanListOkToShop`.
+3. Ejecute el script usando Node.js.
 
-1. Se llama a la función `getProductInfo()` para obtener la información de todos los productos de la tienda.
-2. Se llama a la función `getProductEanList()` para obtener la lista de códigos EAN de todos los productos de la tienda.
-3. Se llama a la función `getProductStockByEanList(eanList)` para obtener el stock de los productos en la lista de códigos EAN.
-4. Se llama a la función `saveToExcel(productInfo, stockList)` para guardar la información de los productos y el stock en un archivo Excel.
+## Ejemplo de Uso
+```bash
+node version2.js
+```
 
-## Observaciones
+## Limitaciones
+- El script asume que todas las peticiones a las APIs serán exitosas y no maneja errores específicos de conexión o autenticación.
+- Solo se guarda la información en un archivo JSON, pero se podría extender para guardar en múltiples formatos o en un sistema de almacenamiento en la nube.
 
-En la función `getProductStockByEanList(eanList)` hay dos versiones del código para obtener el stock de los productos. La versión comentada es utilizando un bucle `for`,
+Esta documentación proporciona una visión general del funcionamiento y la estructura del script `version2.js`. Para detalles específicos sobre cada función y su implementación, consulte el código fuente directamente.
+
+
+# Documentación Técnica - updateData.js
+
+El script `updateData.js` es una herramienta que carga datos desde un archivo JSON y los actualiza en la plataforma de comercio electrónico Vtex utilizando su API. Procesa cada elemento del JSON con un retraso de un segundo entre cada solicitud para evitar exceder los límites de la API.
+
+## Requisitos
+- Node.js instalado en el entorno de ejecución.
+- Dependencias npm: fs, axios.
+
+## Funciones Principales
+
+### `cargarJson(ruta)`
+- **Descripción:** Lee un archivo JSON desde la ruta especificada y procesa cada elemento con un retraso de un segundo entre cada solicitud.
+- **Parámetros:** `ruta` - Ruta del archivo JSON a ser cargado.
+- **Retorno:** Ninguno.
+
+Claro, puedo incluir esa información. Aquí tienes la actualización:
+
+## Uso
+1. Asegúrese de haber ejecutado previamente el script `version2.js`, ya que este script genera el archivo JSON que `updateData.js` utilizará para actualizar los datos en la plataforma de Vtex.
+2. Asegúrese de tener las credenciales necesarias para acceder a la API de Vtex.
+3. Configure las credenciales en el objeto de opciones `headers` dentro de la función `axios.post`.
+4. Ejecute el script utilizando Node.js y especifique la ruta del archivo JSON generado por `version2.js`.
+
+## Ejemplo de Uso
+```bash
+node updateData.js
+```
+
+Esta secuencia de pasos garantiza que los datos actualizados generados por `version2.js` se utilicen correctamente en `updateData.js` para actualizar la información en la plataforma de Vtex.
+
+## Limitaciones
+- El script asume que todas las peticiones a la API de Vtex serán exitosas y no maneja errores específicos de conexión o autenticación.
+- No se proporciona manejo de errores específicos para casos donde las solicitudes a la API de Vtex fallen debido a problemas de datos.
+
+Esta documentación proporciona una visión general del funcionamiento y la estructura del script `updateData.js`. Para detalles específicos sobre su implementación, consulte el código fuente directamente.
